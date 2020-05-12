@@ -20,7 +20,15 @@ void deepCopy(vector<vector<bool>> original,vector<vector<bool>> &copy);
 int getNeighbours(vector<vector<bool>> grid, int x, int y);
 bool inBounds(int size, int r, int c);
 
-int main(){  
+int main(){
+
+  //aesthetics
+  //see this for reference https://stackoverflow.com/questions/2616906/how-do-i-output-coloured-text-to-a-linux-terminal
+
+  cout << "\033[36m"; //text colour
+  cout << "\033[40m"; //background colour
+
+
   clearTerminal();
   cout << "Welcome to Conway's Game of Life!" << endl;
   cout << "Go throuth the README.md file to know the rules. Press Ctrl + C to quit anytime. Enjoy!" << endl;
