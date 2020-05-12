@@ -20,8 +20,10 @@ void deepCopy(vector<vector<bool>> original,vector<vector<bool>> &copy);
 int getNeighbours(vector<vector<bool>> grid, int x, int y);
 bool inBounds(int size, int r, int c);
 
-int main(){
-  cout << "Welcome to Conway's game of life!" << endl;
+int main(){  
+  clearTerminal();
+  cout << "Welcome to Conway's Game of Life!" << endl;
+  cout << "Go throuth the README.md file to know the rules. Press Ctrl + C to quit anytime. Enjoy!" << endl;
   int size;
   char proceed;
   do{
@@ -32,7 +34,6 @@ int main(){
   vector<vector<bool>> grid (size,vector<bool> (size, false));
   printGrid(grid);
   getInitialState(grid);
-  printGrid(grid);
   cout << "Grid setup completed. To start the simulation press \"y\" or press any other key to exit." << endl;
   cin >> proceed;
 
@@ -41,7 +42,7 @@ int main(){
   while(true){
     printGrid(grid);
     getNextBoardConfig(grid);
-    usleep(200000);
+    usleep(150000);
     clearTerminal();
   }
   return 0;
@@ -167,6 +168,7 @@ void readFromFile(vector<vector<bool>> &grid){
 
       grid[x][y] = true;
     }
+    printGrid(grid);
     break;
   }
 }
@@ -185,4 +187,3 @@ void printGrid(vector<vector<bool>> &grid){
     cout << endl ;
   }
 }
-
