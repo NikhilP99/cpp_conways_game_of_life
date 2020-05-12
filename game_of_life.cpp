@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <unistd.h>
 
 using namespace std;
 
@@ -13,6 +14,11 @@ void printGrid(vector<vector<bool>> &grid);
 void getInitialState(vector<vector<bool>> &grid);
 void readManually(vector<vector<bool>> &grid);
 void readFromFile(vector<vector<bool>> &grid);
+void clearTerminal();
+void getNextBoardConfig(vector<vector<bool>> &grid);
+void deepCopy(vector<vector<bool>> original,vector<vector<bool>> &copy);
+int getNeighbours(vector<vector<bool>> grid, int x, int y);
+bool inBounds(int size, int r, int c);
 
 int main(){
   cout << "Welcome to Conway's game of life!" << endl;
@@ -27,15 +33,78 @@ int main(){
   printGrid(grid);
   getInitialState(grid);
   printGrid(grid);
-  cout << "Grid setup completed. To start the simulation press \"y\" or press any key to exit." << endl;
+  cout << "Grid setup completed. To start the simulation press \"y\" or press any other key to exit." << endl;
   cin >> proceed;
 
   if(proceed!='y') return 0;
 
-
-
-
+  while(true){
+    printGrid(grid);
+    getNextBoardConfig(grid);
+    usleep(200000);
+    clearTerminal();
+  }
   return 0;
+}
+
+void getNextBoardConfig(vector<vector<bool>> &original){
+  int n = original.size();
+  vector<vector<bool>> copy(n,vector<bool> (n, false));
+  deepCopy(original, copy);
+
+  for(int x=0;x<n;x++){
+    for(int y=0;y<n;y++){
+      int live_neighbours = getNeighbours(copy,x,y);
+
+      if(live_neighbours < 2){
+        original[x][y] = false;
+      }
+      else if(live_neighbours == 3){
+        original[x][y] = true;
+      }
+      else if(live_neighbours > 3){
+        original[x][y] = false;
+      }
+    }
+  }
+}
+
+int getNeighbours(vector<vector<bool>> grid, int x, int y){
+  int live = 0;
+  int n = grid.size();
+
+  for(int i=-1;i<=1;i++){
+    for(int j=-1;j<=1;j++){
+      if(!(i==0 && j==0) && inBounds(n,x+i,y+j)){
+        if(grid[x+i][y+j]){
+          live++;
+        }
+      }
+    }
+  }
+
+  return live;
+}
+
+bool inBounds(int size, int r,int c){
+  if(r<0 || c<0 || r>=size || c>=size){
+    return false;
+  }
+  return true;
+}
+
+void deepCopy(vector<vector<bool>> original,vector<vector<bool>> &copy){
+  int n = original.size();
+  for(int i=0;i<n;i++){
+    for(int j=0;j<n;j++){
+      copy[i][j] = original[i][j];
+    }
+  }
+}
+
+void clearTerminal(){
+  cout << "\033[2J\033[1;1H";
+  //system("clear");
 }
 
 void getInitialState(vector<vector<bool>> &grid){
@@ -70,6 +139,7 @@ void readManually(vector<vector<bool>> &grid){
     cin >> x >> y;
     grid[x][y] = true;
     cout << endl;
+    printGrid(grid);
   }
 }
 
@@ -115,3 +185,4 @@ void printGrid(vector<vector<bool>> &grid){
     cout << endl ;
   }
 }
+
